@@ -1,5 +1,5 @@
 const userRepository = require('../repositories/userRepsitory')
-const { encryptPassword } = require('../utils/helpers')
+const { encryptPassword } = require('../utils/password')
 
 class UserService {
 

@@ -1,4 +1,5 @@
 const userService = require('../services/userService')
+const { validatePassword } = require('../utils/password')
 
 const userController = {
 
@@ -25,6 +26,18 @@ const userController = {
       return next(erro)
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!emailRegex.test(email)) {
+      const erro = new Error('Não foi possível cadastrar usuário.')
+      erro.statusCode = 400
+      erro.details = {
+        fiel: 'Email',
+        message: 'Formato de e-mail inválido'
+      }
+      return next(erro)
+    }
+
     if (!senha) {
       const erro = new Error('Dados de entrada inválidos.')
       erro.statusCode = 400
@@ -35,7 +48,7 @@ const userController = {
       return next(erro)
     }
 
-    const isFound = userService.getUserByEmail()
+    const isFound = await userService.getUserByEmail(email)
 
     if (isFound) {
       const erro = new Error('Não foi possível cadastrar usuário.')
@@ -47,8 +60,20 @@ const userController = {
       return next(erro)
     }
 
+    const isValidPassword = await validatePassword(senha)
+
+    if (!isValidPassword) {
+      const erro = new Error('Não foi possível cadastrar usuário.')
+      erro.statusCode = 400
+      erro.details = {
+        fiel: 'Senha',
+        message: 'Senha deve conter 8 ou mais dígitos e 3 dos 4 requisitos mínimos: letras minúsculas, letras maiúsculas, números e/ou caracteres especiais'
+      }
+      return next(erro)
+    }
+
     const user = await userService.createUser(req.body)
-    res.status(201).send({status: 'sucess', data: {user}, message: 'User created successfully.'})
+    res.status(201).send({status: 'success', data: {user}, message: 'Usuário criado com sucesso.'})
 
   },
 

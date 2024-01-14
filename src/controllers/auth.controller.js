@@ -1,6 +1,6 @@
 const jsonwebtoken = require('jsonwebtoken')
 const User = require('../models/User')
-const helpers = require('../utils/helpers')
+const helpers = require('../utils/password')
 
 const authController = {
   login: async (req, res) => {
