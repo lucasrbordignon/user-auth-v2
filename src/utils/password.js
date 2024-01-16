@@ -5,10 +5,8 @@ async function encryptPassword (password) {
 }
 
 async function checkPassword (password, user){
-  try {            
-    const hash = await bcrypt.hash(password, 10)
-  
-    return await bcrypt.compare(hash, user)
+  try {              
+    return await bcrypt.compare(password, user)
 
   } catch (error) {
     throw error

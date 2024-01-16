@@ -10,7 +10,7 @@ const userController = {
       const erro = new Error('Dados de entrada inválidos.')
       erro.statusCode = 400
       erro.details = {
-        fiel: 'nome',
+        fiel: 'Nome',
         message: 'Nome deve ser preenchido'
       }
       return next(erro)
@@ -77,15 +77,22 @@ const userController = {
 
   },
 
-  getAllUsers: async (req, res) => { 
-    try{
-      const users = await userService.getAllUsers()    
+  getAllUsers: async (req, res, next, err) => { 
 
-      res.send(users)
+    const users = await userService.getAllUsers()    
 
-    } catch (error) {
-      res.status(500).send(error.message)
+    if (!users) {
+      const erro = new Error('Não foi possível encontrar usuários.')
+      erro.statusCode = 400
+      erro.details = {
+        fiel: 'getAllUsers',
+        message: err.message
+      }
+      
+      return next(erro)
     }
+
+    res.status(200).send({status: 'success', data: {users}, message: 'Usuários encontrados.'})
   },
 
   getUserById: async (req, res) => { 

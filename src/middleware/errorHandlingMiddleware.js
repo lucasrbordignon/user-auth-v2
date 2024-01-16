@@ -12,12 +12,8 @@ const errorMiddleware = (err, req, res, next) => {
   if (err.details) {
     errorResponse.error.details = err.details
   }
-
-  if (process.env.NODE_ENV === 'production') {
-    delete errorResponse.error.stack;
-  } else {
-    errorResponse.error.stack = err.stack;
-  }
+  
+  delete errorResponse.error.stack;
 
   res.status(statusCode).json(errorResponse)
 }
