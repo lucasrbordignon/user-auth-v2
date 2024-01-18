@@ -18,18 +18,10 @@ class authService {
     return jsonwebtoken.sign({
       id: user._id,
       nome: user.nome,
-      email: user.email,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24  // Expira em 1 dia
-    }, 'ProtectToken')    
-  }
-
-
-  async logout (  ) {
-    res.clearCookie('Token')
-  }
-
-  async logged (req) {
-    return req.cookies.Token || null
+      email: user.email      
+    }, 
+    'ProtectToken', 
+    {expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 24})   // Expira em 1 dia  
   }
 }
 

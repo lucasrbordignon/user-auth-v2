@@ -61,32 +61,8 @@ const authController = {
       return next(erro)
     }
 
-    userToken.Exp = 'Expira em 1 dia'
-
     res.cookie('Token', userToken)
-    res.status(200).send({status: 'success', data: {userToken}, message: 'Autenticação realizada com sucesso.'})
-  },
-
-  logout: async (req, res) => {    
-    await authService.logout()
-    res.status(200).send('Cookie limpo com sucesso')
-  },
-
-  logged: async (req, res, next) => {
-
-    const auth = await authService.logged(req)
-
-    if (!auth) {
-      const erro = new Error('Usuário não se encontra logado.')
-      erro.statusCode = 400
-      erro.details = {
-        fiel: 'login',
-        message: 'Usuário não se encontra logado'
-      }
-      return next(erro)
-    } 
-    
-    return res.status(200).send({status: 'success', message: 'Usuário logado'})
+    res.status(200).send({status: 'success', data: {userToken, Exp: 'Expira em 1 dia'}, message: 'Autenticação realizada com sucesso.'})
   }
 }
 
